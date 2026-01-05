@@ -21,12 +21,15 @@ const UserManual = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const [activeSection, setActiveSection] = useState<string>('');
-    // const [searchQuery, setSearchQuery] = useState<string>('');
+    const [searchQuery, setSearchQuery] = useState<string>('');
 
     useEffect(() => {
         fetchContents();
     }, []);
 
+    useEffect(() => {
+        setSearchQuery(" ");
+    }, [])
     useEffect(() => {
         const handleScroll = () => {
             const articles = document.querySelectorAll('.manual-article');
@@ -89,20 +92,20 @@ const UserManual = () => {
     };
 
     // Filter contents based on search
-    // const filteredContents = contents.filter(item =>
-    //     item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    //     item.content.toLowerCase().includes(searchQuery.toLowerCase())
-    // );
+    const filteredContents = contents.filter(item =>
+        item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.content.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
     // Group filtered contents
-    // const filteredGroupedContents = filteredContents.reduce<GroupedContents>((acc, content) => {
-    //     const category = content.category || 'General';
-    //     if (!acc[category]) {
-    //         acc[category] = [];
-    //     }
-    //     acc[category].push(content);
-    //     return acc;
-    // }, {});
+    const filteredGroupedContents = filteredContents.reduce<GroupedContents>((acc, content) => {
+        const category = content.category || 'General';
+        if (!acc[category]) {
+            acc[category] = [];
+        }
+        acc[category].push(content);
+        return acc;
+    }, {});
 
     if (loading) {
         return (
@@ -200,7 +203,7 @@ const UserManual = () => {
 
                 {/* Articles */}
                 <main className="manual-content" id="docs">
-                    {/* <div className="content-container">
+                    <div className="content-container">
                         {Object.entries(searchQuery ? filteredGroupedContents : groupedContents).map(([category, items]) => (
                             <div key={category} className="category-section">
                                 <h2 className="category-title">{category}</h2>
@@ -229,7 +232,7 @@ const UserManual = () => {
                                 <p>No documentation matches "{searchQuery}"</p>
                             </div>
                         )}
-                    </div> */}
+                    </div>
                 </main>
             </div>
 
